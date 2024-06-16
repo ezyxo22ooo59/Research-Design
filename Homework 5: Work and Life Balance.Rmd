@@ -1,0 +1,379 @@
+---
+title: "Homework 5:  Work and Life Balance"
+author: ""
+date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, tidy = F)
+```
+
+# {.tabset}
+
+## Background
+
+For this assignment, we will be working to understand the impact of different working models on the perceived satisfaction of employees with regard to their work/life balance.  Corporate goals often incentivize working longer hours and in more demanding roles.  However, alternative models exist.  Some businesses and countries are experimenting with shorter working weeks or changes to their corporate cultures.
+
+To further examine the issue, a team of researchers 
+partnered with a number of companies to examine the impact of their corporate culture and the length of the working week on the overall satisfaction of employees with regard to their work/life balance.  The research team had previously classified the working culture of these companies as either relaxed or demanding based upon validated research tools.
+
+The researchers conducted an experiment with working weeks of different lengths.  Prior to the experiment, all of these companies operated with conventional 5-day working weeks and standard hours.  Each company was randomized to implement either a 3-day working week, a 4-day working week, or to maintain its conventional 5-day working week.  The overall number of expected working hours was held in proportion to the working week (e.g. 8 hours per day for the number of days worked).  However, the compensation of the participating employees remained fixed at their prior levels.  Training was provided to the managers and the employees to set reasonable expectations for what should be accomplished in the shortened working weeks.  The companies were monitored to ensure compliance with the schedule and the expectations.  The study was conducted over a period of 6 weeks.
+
+At the end of this period, consenting employees were given a survey that assessed their satisfaction with their balance of work and life.  The answers were combined into an overall measure of satisfaction ranging from 0 to 100.
+
+In this assignment, we will be working with the information provided to analyze the satisfaction scores and consider other possible implications of changes in the typical working conditions of companies.
+
+## Data
+
+The data are available in the file **work and life balance.csv**.
+
+For each consenting employee, information on their years of experience and whether they are a manager was collected.  Data about each employee's company was recorded, including its identifier, industry, and the assessment of its working culture.  The company's randomly assigned workweek was included, and each employee's overall satisfaction score was recorded.
+
+
+
+## Instructions
+
+Based upon the information above and the data provided, please answer the following questions.  When numeric answers are requested, a few sentences of explanation should also be provided.  Please show your code for any calculations performed.
+
+## Preliminary Code
+
+This section of the report is reserved for any work you plan to do ahead of answering the questions -- such as loading or exploring the data.
+
+```{r read_data}
+
+```
+
+```{r functions}
+
+```
+
+
+## Questions {.tabset}
+
+### Q1 
+
+#### Question
+
+What are the primary research questions of the study?  State them clearly in plain language.  Then briefly explain the importance of this investigation.
+
+#### Answer
+
+```{r q1}
+How many days of working per week would be the most statisfied for workers'' life and work balance?
+```
+
+
+### Q2 
+
+#### Question
+
+For each research question you mentioned above, describe how well the study is designed to evaluate the question.
+
+#### Answer
+
+```{r q2}
+I believe that the first question is well designed because the level of statisfaction could be best answered by survey of the employees.
+```
+
+
+
+### Q3 
+
+#### Question
+
+What kind of statistical method could be employed to analyze the data and evaluate the research questions?
+
+
+#### Answer
+
+```{r q3}
+There could be a t test on the level of statisfaction rate on 3, 4, and 5 days of work per week.
+```
+
+
+### Q4
+
+#### Question
+
+Fit your intended model and show a summary of its results.  While you may include other variables, we will specifically exclude the company from the analysis because these effects would not generalize as well to the broader industries.
+
+
+#### Answer
+
+```{r q4}
+setwd('/Users/emilyziyixiao/DataspellProjects/ResearchDesignHW')
+data <- read.csv('work and life balance.csv')
+library(data.table)
+
+threedays <- data[data$workweek == '3 Days', 'satisfaction']
+fourdays <- data[data$workweek == '4 Days', 'satisfaction']
+fivedays <- data[data$workweek == '5 Days', 'satisfaction']
+
+t.test(threedays, fivedays, alternative = "two.sided", var.equal = FALSE)
+
+
+```
+
+
+### Q5
+
+#### Question
+
+Explain the results of your model.  Describe how the estimates relate to your research questions and any other notable findings.
+
+#### Answer
+
+```{r q5}
+The result shows that there is significant difference between the satisfaction score of 3 days and 5 days group. We could see that people who work 3 days a week are more satisfied with their work/life balance than those who work 5 days a week.
+```
+
+
+
+### Q6
+
+#### Question
+
+Would variable interactions also play a role?  If your research question includes multiple independent variables, then include pairwise interactions with them.  If you think there is only one independent variable in the study, then create an interaction between that variable and other measured factors that you might consider relevant.  Show the numeric results and comment on the interactions.
+
+
+#### Answer
+
+```{r q6}
+I believe that the level of satisfaction is only related to satisfaction score, the years of experience, manager or not, ndustry, and culture are not so relevant.
+```
+
+
+
+### Q7
+
+#### Question
+
+Are there other variables that would be helpful to measure?  Is this even necessary?  Explain your answer and reasoning.
+
+#### Answer
+
+```{r q7}
+I believe the type of work that the employees are doing would be helpful to measure. Some jobs requires people to physically work hard and some are just sitting in offices. Some requires large amount of thinking prossec while other jobs are just repeating their work over and over again. Therefore, I believe that there could be a catagorical variable measuring the type of work of our participant.
+```
+
+
+
+### Q8
+
+#### Question
+
+What if we wanted to compare all of the average satisfaction scores in the three groups of working weeks?  For this analysis, you may ignore the other variables.  Show the results of a statistical test to simultaneously evaluate the difference in satisfaction for all of the pairs of possible working weeks.  Comment on the results.
+
+#### Answer
+
+```{r q8}
+threedays <- data[data$workweek == '3 Days', 'satisfaction']
+fourdays <- data[data$workweek == '4 Days', 'satisfaction']
+fivedays <- data[data$workweek == '5 Days', 'satisfaction']
+
+t.test(threedays, fivedays, alternative = "two.sided", var.equal = FALSE)
+t.test(threedays, fourdays, alternative = "two.sided", var.equal = FALSE)
+t.test(fourdays, fivedays, alternative = "two.sided", var.equal = FALSE)
+
+The average score of 3 weeks is 77.59794, 4 weeks is 68.41237, and 5 weeks is 65.71770. The 3 statistical test all has p-value less than alpha 0.05. This means that we reject the null hypothesis. Three groups have significant different on their statisfaction scoure.
+
+
+
+```
+
+
+
+
+### Q9
+
+#### Question
+
+Now conduct separate tests of whether a shorter working schedule increases satisfaction for each pair of schedules.  Which of these results would remain significant with a Bonferroni correction for multiple comparisons?  Show the p-values for the t-tests, the corrected threshold for a 0.05 significance level, and whether the differences remain significant after the adjustment.
+
+#### Answer
+
+```{r q9}
+model <- aov(satisfaction ~ ., data = data)
+summary(model)
+
+# The years.experience, manager, and company has a significant level greater than 0.05, which means that they remain significant.
+```
+
+### Q10
+
+Do you think the 6 week time frame is an appropriate length to investigate the effect of changes in the working schedule on the satisfaction of work/life balance?  Explain why or why not.
+
+#### Answer
+
+```{r q10}
+I believe that 6 weeks is not long enough since people might not have used to the assigned working schedual. A time between 3 month to 6 month would be better. Also, in order to not mess up with companies origional schedual much, the study should not be too long either.
+```
+
+
+
+
+
+### Q11
+
+#### Question
+
+Now the researchers would like to build upon the work of the first experiment they conducted.  In the comments on the surveys, a sizable number of the employees in the first study noted that they did not get enough sleep with a 5-day working week.  Anecdotally, those working the shorter weeks during the experiment frequently mentioned the benefit of getting enough rest.  
+
+With this in mind, the researchers would like your help in planning their next experiment.  They would once again like to randomize companies to shorter working weeks.  Based on the feedback of the previous experiment, a 3-day working week would not be very practical for the companies, while 4 days seemed more actionable.  Comparing the amount of sleep of employees with 4-day schedules to the amount of sleep of those with 5-day schedules, how would you conduct the experiment to answer this question?  State a research question, comment on the operational designs, and describe the type of data you would gather.
+
+#### Answer
+
+```{r q11}
+Does people who work 5 days each week not getting enough sleep compared to those who work 4 days a week?
+
+I would gather the statisfaction score and number of sleeping ours per week by survey.
+```
+
+
+
+
+### Q12
+
+#### Question
+
+What kind of statistical test would be appropriate for your research question?  Provide sufficient details on all of the choices you would make.
+
+#### Answer
+
+```{r q12}
+I would make a two sample t test on the sleeping ours of 4 days and 5 days group to see if there is a significant difference on their sleeping hours. The null hypothesis would be 4 days sleeping hours equals 5 days sleeping hours. I would also make a t test on the satisfaction level for 4 days and 5 days group to see if the satisfaction scoure has a difference. The null hypothesis would be 4 days satisfaction level equals 5 days satisfaction level.
+```
+
+
+
+### Q13 
+
+#### Question
+
+What is the smallest amount of additional average sleeping time that would constitute a meaningful improvement for the typical employee?  Explain your reasoning.
+
+#### Answer
+
+```{r q13}
+I believe an average difference of more than 1 hour would be meaningful. People who get 6 hours of sleep are often to complain to feel sleepy but those who get 7 hours would feel enough. This way 1 hour of sleep makes a difference. If the difference is below 1 hour, it would be consider as not so meaningful.
+```
+
+
+
+
+### Q14
+
+#### Question
+
+The researchers are hoping to sample approximately 200 employees for the new study, evenly divided into two groups of 100.  What would be the power of your proposed statistical test in this scenario?  Use your suggested effect size from the previous question in units of hours and a significance level of 0.05.  For now, assume that the standard deviation of sleeping times is 1 hour.  Produce a numeric answer and then comment on the results.
+
+#### Answer
+
+```{r q14}
+pnorm(q = 1.645*(1/sqrt(200)), mean = 0.05, sd = 1/sqrt(200), lower.tail = TRUE)
+
+
+# The power of this test would be 0.8258504.
+# There is 500 people for the previous test and each group had different amount of people. Our group even has less people, but same amount in each group could give us the ability to make a proportion test.
+```
+
+
+
+### Q15
+
+#### Question
+
+It may be difficult to convince companies to consider a 4-day working week and to convince employees to provide you with their records of sleep.  How would these results change if you could only get 30 employees in the 4-day working week?  Assume that the other inputs from the previous question will be used.  Calculate the power and comment on the results, along with the differences from the previous question.
+
+
+
+#### Answer
+
+```{r q15}
+pnorm(q = 1.645*(1/sqrt(200)), mean = 0.05, sd = 1/sqrt(30), lower.tail = TRUE)
+
+#30 employees would be not so significant since the power of the test is only 0.6417889.
+```
+
+
+### Q16
+
+#### Question
+
+Assuming that we hold the other inputs fixed from the previous 2 questions, what sample size would be needed in the 4-day working week group to achieve a power of 0.9?  Make sure to round your answer up to a whole number.
+
+
+#### Answer
+
+```{r q16}
+pnorm(q = 1.645*(1/sqrt(200)), mean = 0.05, sd = 1/sqrt(380), lower.tail = TRUE)
+
+#The sample size need to be greater than or equal to 380 for the power to be 0.9.
+
+```
+
+
+
+### Q17
+
+#### Question
+
+Describe the trade-offs between power and sample size in this setting.  Including considerations of the statistical issues along with the practical aspects of running the experiment.
+
+#### Answer
+
+```{r q17}
+The greater the sample size, the higher the power. If we want the power to be more significant, we need a larger sample size. But if we could not find a large sample, we could only have a lower the power.
+```
+
+
+
+### Q18
+
+#### Question
+
+In our earlier analyses, we had assumed that the standard deviation of sleeping times was 1 hour.  What if this assumption is incorrect?  For now, you may consider an experiment with 100 sampled employees in each treatment group and a significance level of 0.05.  Describe how the power changes if our assumption is wrong in each direction.
+
+#### Answer
+
+```{r q18}
+pnorm(q = 1.645*(2/sqrt(100)), mean = 0.05, sd = 2/sqrt(100), lower.tail = TRUE)
+pnorm(q = 1.645*(0.5/sqrt(100)), mean = 0.05, sd = 0.5/sqrt(100), lower.tail = TRUE)
+
+# If we assume the standard diviation is wrong, we could try calculate the power with a higher and a lower standard diviation. For a standard diviation of 2, we got a power of 0.9184921, and for a standard diviation of 0.5, we got a power of 0.7405364. Therefore, we know that the higher the standard diviation, the higher the power. So if we over estimate the standard diviation, our power is higher than we measured, and if we under estimate, our power is actually lower than we measured.
+
+```
+
+
+
+### Q19
+
+#### Question
+
+Suppose we had been able to add a third group to the planned study so that we could test the 3-day, 4-day, and 5-day working weeks.  We would like to study the differences in mean nightly sleeping time across these groups using a one-way ANOVA model.  The experiment would have 100 employees in each group while planning for a power of 0.8 using a significance level of 0.05.  Under these circumstances, what effect size could be detected?  Convert the calculated effect size into minutes under an assumption that the standard deviation is 1 hour.
+
+#### Answer
+
+```{r q19}
+library(pwr)
+pwr.t2n.test(n1 = 100, n2 = 100, d = 0.4, sig.level = 0.05,
+    alternative = "greater")
+
+# The size should be 0.4 hours, which is 24 minutes for the power to be 0.8.
+
+```
+
+
+### Q20
+
+#### Question
+
+Taking into account your analyses and statistical planning, what kind of recommendations would you make to the companies in order to help them to improve the satisfaction of their employees with regard to work/life balance?
+
+#### Answer
+
+```{r q20}
+According to the analysis, I recommend the companiess to see if there is significant difference between the amount of sleep that the 4 days group get and the amount of sleep that the 5 days group get. It is a more objective way of measuring if the work could be done better or not than the satisfaction scoure since not enough sleep might cause employees to work inefficently. Also, the company should see if there is significant difference between the satisfaction socre of 4 days group and 5 days group. If the test prove that there is a significant difference, the company should make all employees to work for 4 days a week. If there is not much difference, the company should keep the 5 days work per week.
+```
+

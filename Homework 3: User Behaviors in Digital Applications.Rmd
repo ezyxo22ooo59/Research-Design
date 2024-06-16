@@ -1,0 +1,402 @@
+---
+title: "Homework 3:  User Behaviors in Digital Applications"
+author: ""
+date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, tidy = F)
+```
+
+# {.tabset}
+
+## Background
+
+For this assignment, we will be working on understanding the behaviors and characteristics of people who use a digital application.  The product offers recommendations on nearby attractions, restaurants, and businesses based on the user's location.  This includes a free version for any user along with a subscription model that provides more customized recommendations for users who pay for the service.
+
+With free installation on a mobile device, digital applications have a low barrier to entry.  They also experience high rates of attrition, as users may not continue to log in.  With this in mind, the company is interested in better understanding the early experience of users with the application.  A time point of 30 days was selected as an important milestone.  Which factors might impact whether new users remain active beyond 30 days?  Who is likely to subscribe within 30 days?  
+
+The company would benefit from analyzing the available data to understand the current trends.
+
+## Data
+
+To begin to investigate these questions, the company has gathered some simple information about new users of the application.  A simple random sample of users was taken by gathering information in the company's database.  The sample was limited only to users who first installed the application in the last 6 months, when a new version of the application was released.  The sample was further limited to users who signed up and had enough time for the company to measure its key milestones.  To ensure reasonable comparisons, the data were limited to users in Australia, Canada, United Kingdom, and the United States, which were deemed appropriately similar in terms of their linguistic and economic characteristics.
+
+For each user, basic information (age group, gender, and country) was collected from the user's profile.  Then the following characteristics were measured:
+
+* **daily_sessions**:  This is the average number of sessions per day in the first 30 days for each user.  One session consists of a period of active use as measured by the company's database.  Then the daily sessions for a user is the total number of sessions for the period divided by 30.
+
+* **subscribed_30**:  This measure (TRUE/FALSE) indicates whether the user paid for any subscription service within 30 days.
+
+* **active_30**:  This measures (TRUE/FALSE) whether the user **remained active** at 30 days.  The company decided to measure this by identifying whether the user had at least one active session in the 7-day period after the first 30 days.
+
+## Instructions
+
+Based upon the information above and the data provided, please answer the following questions.  When numeric answers are requested, a few sentences of explanation should also be provided.  Please show your code for any calculations performed.
+
+## Preliminary Code
+
+This section of the report is reserved for any work you plan to do ahead of answering the questions -- such as loading or exploring the data.
+
+```{r preliminary_code}
+setwd('/Users/emilyziyixiao/DataspellProjects/ResearchDesignHW')
+data <- read.csv('digital application user data.csv')
+library(data.table)
+glimpse(data)
+# data("digital application user data.csv")
+# dat <- as.data.table("digital application user data.csv")
+
+library(ggplot2)
+input <- readLines(con = file("stdin"))
+# table(input)
+for (line in input) {
+  dat<-data.frame(input[line])
+  cat(line, sep="\n")
+
+}
+table(data)
+```
+
+
+## Questions {.tabset}
+
+
+### Q1 
+
+#### Question
+
+We are interested in the question of whether female users have higher rates of daily sessions than other users do.  What kind of parameter should we select as our metric for each group?
+
+#### Answer
+
+```{r q1}
+ # The parameter we should use are 'female' and 'daily_sessions'.
+```
+
+
+### Q2 
+
+#### Question
+
+Use the data to estimate the values of your selected parameter for female users and for other users.
+
+#### Answer
+
+```{r q2}
+femaleDS <- data[data$female == TRUE, 'daily_sessions']
+otherDS <- data[data$female == FALSE, 'daily_sessions']
+mean(femaleDS)
+mean(otherDS)
+
+# The result shows that female users have higher rates of daily sessions than other users
+```
+
+
+### Q3 
+
+
+#### Question
+
+Does there appear to be an observed difference between the groups?  Without performing statistical tests, would you consider this difference to be meaningful for the business?  Explain your answer.
+
+#### Answer
+
+```{r q3}
+# The average value of female users is 1.472535 and non-female is 1.42895, which has a very small difference. The result seems like it does not have a meaningful difference but we do not know for sure untill we apply statistical tests.
+```
+
+
+
+### Q4 
+
+#### Question
+
+Which statistical test would be appropriate for testing the two groups for differences in their daily sessions according to your selected metric?
+
+
+#### Answer
+
+```{r q4}
+# We should use a two-sample t-test since we are calculating if two population means are equal.
+```
+
+
+### Q5 
+
+#### Question
+
+How many samples (groups) are included in your selected statistical test?
+
+#### Answer
+
+```{r q5}
+# Two samples are included in this test.
+```
+
+
+### Q6
+
+#### Question
+
+How many tails are considered in your selected statistical test?
+
+#### Answer
+
+```{r q6}
+# It should be a two-tailed test.
+```
+
+
+### Q7
+
+#### Question
+
+Perform your selected statistical test.  Report a p-value for the results.
+
+#### Answer
+
+```{r q7}
+# p1: female daily sessions
+# p2: non-female daily sessions
+# Ho: p1 = p2
+# Ha: p1 != p2
+
+t.test(femaleDS, otherDS, alternative = "two.sided", var.equal = FALSE)
+
+# p-value of the test is 0.08104.
+```
+
+### Q8 
+
+#### Question
+
+How would you interpret this finding for the product's managers of the digital application?  Make sure to frame the result in terms that will be meaningful for their work.
+
+#### Answer
+
+```{r q8}
+# The statistical test shows that p-value is 0.08104, which suggests that these kinds of observed differences would occur in roughly 8.1% of similar experiments. We use 0.05 as alpha, our p-value is larger than alpha, we fail to reject the null hypothesis. we could say that there is not much difference on rates of daily sessions of female versus non-female.
+```
+
+
+
+### Q9 
+
+#### Question
+
+The product's managers are also interested in the age groups that tend to use the product and how they vary by country.  Create a table with the following characteristics:
+
+* Each row represents an age group.
+
+* Each column represents a country
+
+* Each listed value shows the number of users of that age group within that country.
+
+#### Answer
+
+```{r q9}
+library(ggplot2)
+library(DT)
+library(plyr); library(dplyr)
+library(janitor)
+library(vtree)
+
+#head(data)
+#skimr::skim(data)
+
+dat <- tabyl(data, country, age_group)
+dat
+
+#dat <- as.data.table(data)
+#dat[1:3, ]
+#dat[, unique("country")]
+
+#the.counts <- data[, .(id = .N), by = c("country", "age_group")]
+#datatable(data = the.counts, rownames = F)
+
+#the.counts[, N_country := sum(id), by = country]
+#the.counts[, N_age_group := sum(id), by = age_group]
+#the.counts[, N := sum(id)]
+#datatable(data = the.counts, rownames = F)
+```
+
+### Q10
+
+#### Question
+
+Now convert the previous table of counts by age group and country into percentages.  However, we want the percentages to be calculated separately within each country.  Show the resulting table as percentages (ranging from 0 to 100) rounded to 1 decimal place.
+
+#### Answer
+
+```{r q10}
+tabyl(data, country, age_group) %>%
+        adorn_percentages("col") %>%
+        adorn_pct_formatting(digits = 1)
+```
+
+### Q11
+
+#### Question
+
+Without performing any statistical tests, do you think that each country has a similar distribution of users across the age groups?  Explain why or why not.
+
+#### Answer
+
+```{r q11}
+# Based on the table, we see that the users across the age groups seems similar, but we do not know until a statistical test is performed.
+```
+
+
+
+### Q12
+
+#### Question
+
+Which statistical test would help you determine if there are age-based differences across these countries?  Explain why you selected this test.
+
+#### Answer
+
+```{r q12}
+I would use the Chi Squre test.
+```
+
+
+
+### Q13
+
+#### Question
+
+What is the value of the test statistic for your selected test?  Calculate this answer independently without using an existing testing function.  (You may use such a function to check your answer.)  Show your code along with the result.
+
+#### Answer
+
+```{r q13}
+the.counts <- data[, .(Observed = sum(N)), by = "country"]
+the.counts[, Expected := sum(Observed) * 0.5]
+x.sq <- the.counts[, sum((Observed - Expected)^2/Expected)]
+```
+
+
+### Q14
+
+#### Question
+
+What is the p-value for this test?   Calculate this answer independently without using an existing testing function.  (You may use such a function to check your answer.)  Show your code along with the result.
+
+#### Answer
+
+```{r q14}
+pval <- pchisq(q = x.sq, df = df, lower.tail = F)
+```
+
+### Q15
+
+#### Question
+
+How would you interpret this finding for the product's managers of the digital application?  Make sure to frame the result in terms that will be meaningful for their work.
+
+#### Answer
+
+```{r q15}
+We use 0.05 as alpha, our p-value greater  than alpha, we fail to reject the null hypothesis. we could say that there is not enough evidence to show that there is significant difference between age groups.
+```
+
+
+
+
+### Q16
+
+#### Question
+
+Canada and the United States are geographically connected and often having overlapping media markets.  We can place them in one group and compare them to a second group with Australia and the United Kingdom.  Do these two groups have similar rates of users who remain active at 30 days?  Perform a statistical test, explain why you selected it, and interpret the results.  
+
+#### Answe
+
+```{r q16}
+
+US30days <- data[data$country == "USA", 'subscribed_30']
+Canada30days <- data[data$country == "Canada", 'subscribed_30']
+
+table(US30days)
+table(Canada30days)
+
+# p1: US users who remain active at 30 days
+# p2: Canada users who remain active at 30 days
+# Ho: p1 = p2
+# Ha: p1 != p2
+
+prop.test(x = c(117, 42), n = c(2358+117, 573+42))
+
+# I select two sample proportion test because we are looking for if two groups have similar rates, it is to test the proportion of two groups.
+# The result shows that these kinds of observed differences would occur in roughly 4.4% of similar experiments since p-value is 0.04446. We use 0.05 as alpha, our p-value is smaller than alpha, we reject the null hypothesis. we could say that there is significant evidence to show that there is difference between US and Canada.
+
+
+
+```
+
+
+
+### Q17
+
+#### Question
+
+The application's managers would like to study the relationship between daily sessions and subscriptions.  Anecdotally, they think that having at least 1 session per day could be a meaningful indicator.  Using the outcome of subscriptions at 30 days, compare the rates of subscriptions for users with at least 1 daily session to those with fewer.  Perform a statistical test, explain the reasons for your selection, and interpret the results.
+
+#### Answer
+
+```{r q17}
+
+aSession <- data[data$daily_sessions >= 1, 'subscribed_30']
+moreSession <- data[data$daily_sessions < 1, 'subscribed_30']
+
+table(aSession)
+table(moreSession)
+
+# p1: users who having at least 1 session per day and remain active at 30 days
+# p2: users who having less than 1 session per day remain active at 30 days
+# Ho: p1 = p2
+# Ha: p1 != p2
+
+prop.test(x = c(190, 86), n = c(2889+190, 1835+86))
+
+# I select two sample proportion test because we are looking for if two groups have similar rates, it is to test the proportion of two groups.
+# The result shows that these kinds of observed differences would occur in roughly 1.3% of similar experiments since p-value is 0.01286. We use 0.05 as alpha, our p-value is smaller than alpha, we reject the null hypothesis. we could say that there is significant evidence to show that there is difference between users who having at least 1 session per day and those users who does not.
+
+
+
+```
+
+
+
+
+### Q18
+
+#### Question
+
+What type of study was conducted?  Are there any concerns about the analyses based upon the method of research?
+
+#### Answer
+We had observational test. The concern would be ethical concern. We are using the data related to other people's personal information without their volunteer or consent.
+
+
+### Q19
+
+#### Question
+
+How actionable are the findings of this analysis?  Do the independent variables help us to make choices about how to improve the outcomes of activity and subscription at 30 days?
+
+#### Answer
+Yes the independent variables help us to make choices about how to improve the outcomes of activity. Since there is much difference between people who have at least 1 session per day and those users who does not, we could try making more users use more than 1 session per day.
+
+
+### Q20
+
+#### Question
+
+What else could you recommend to the managers of the product for improving their preferred outcomes of activity and subscriptions at 30 days?  Provide a number of strategic recommendations that are actionable, measurable, and amenable to experimentation.
+
+#### Answer
+I would recommend the managers to use adds or other ways to increase the number of customer who use more than 1 session per day. Our test shows that this way more people would subscriptions at 30 days.
+
+

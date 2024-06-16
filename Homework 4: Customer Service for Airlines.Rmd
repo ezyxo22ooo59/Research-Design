@@ -1,0 +1,338 @@
+---
+title: "Homework 4:  Customer Service for Airlines"
+author: ""
+date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, tidy = F)
+```
+
+# {.tabset}
+
+## Background
+
+For this assignment, we will be working on understanding the customer service experience offered by a hypothetical airline.  When support is required, a customer initiates contact with the airline, either over the phone or using an online platform.  Once connected, an agent of the airline works with the customer to understand the problem.  When the interaction is complete, the agent creates records about the case.  This includes the overall category of the issue along with whether the problem was resolved.
+
+The airline would like to better understand the differences between support provided over the phone and online.  With different types of interactions, the agents require different kinds of training, and the costs and resources are different in each modality.  With this in mind, the airline is quite interested in comparing the quality of each type of service with regard to how well the cases can be resolved.  They are also generally interested in improving their customer service and better understanding the experience.
+
+In this assignment, we will be working with the information provided and consider the question of how to best understand the customer service experience. 
+
+## Data
+
+For each call, the following characteristics were measured:
+
+* **category**:  Each case was classified according to the type of service that was requested by the customer1.
+
+* **service**:  This indicates whether the support was provided by phone or online.
+
+* **waiting.time.minutes**:  This records how long the customer waited to begin interacting with an agent.
+
+* **session.minutes**:  This records how long the customer interacted with the agent.
+
+* **customer.demeanor**:  This records the agent's perception of the customer based on the tone of the conversation.
+
+* **resolved**:  This measures whether the agent was able to solve the customer's main concern in the interaction.
+
+## Instructions
+
+Based upon the information above and the data provided, please answer the following questions.  When numeric answers are requested, a few sentences of explanation should also be provided.  Please show your code for any calculations performed.
+
+## Preliminary Code
+
+This section of the report is reserved for any work you plan to do ahead of answering the questions -- such as loading or exploring the data.
+
+```{r preliminary_code}
+setwd('/Users/emilyziyixiao/DataspellProjects/ResearchDesignHW')
+
+data <- read.csv('airline customer service.csv', stringsAsFactors = TRUE)
+```
+
+
+## Questions {.tabset}
+
+### Q1 
+
+#### Question
+
+What is the primary research question that will help the airline?  Make sure to state this in terms of a measurable quantity.
+
+#### Answer
+
+```{r q1}
+Are there any significant difference between support provided over the phone and over online? What is the difference in terms of the quality of service? How could the customer service improve and better understand
+```、
+
+
+
+
+
+### Q2 
+
+#### Question
+
+What kind of research study can be conducted with the available data?
+
+#### Answer
+
+```{r q2}
+A quantitative research can be conducted with the avaliable data.
+```
+
+
+
+
+### Q3 
+
+#### Question
+
+Are there any drawbacks to the kind of study you plan to undertake?
+
+#### Answer
+
+```{r q3}
+There could be a research bias.
+```
+
+
+
+### Q4 
+
+#### Question
+
+If you could devise your own experiment, what would you do differently?
+
+#### Answer
+
+```{r q4}
+I would also take the survey to get the opinion of customers. I would let the customers rate each service after they finish the service.
+```
+
+
+
+### Q5 
+
+#### Question
+
+Perform a stastistical test that would analyze the relationship between the independent and dependent variables.  In this test, do not consider any other variables.  What would you conclude from this test?
+
+#### Answer
+
+```{r q5}
+library(caret)
+lm(service~waiting.time.minutes+session.minutes+customer.demeanor, data = data)
+
+I would say that non of the independent variable has a strong correlation with the dependent variable "service".
+
+```
+
+
+
+### Q6
+
+#### Question
+
+Apart from the independent and dependent variables, how should we think about the other variables in the data, and what would be the best way to consider them in the analysis?
+
+#### Answer
+
+```{r q6}
+The other variables are "category" and "resolved". We could do some seperate analysis to find the influence of these variables.
+```
+
+
+
+
+### Q7
+
+#### Question
+
+What would be an appropriate way to incorporate these other measured variables into an analysis of the relationship between the independent and dependent variables?
+
+#### Answer
+
+```{r q7}
+For the "category" variable, we could calculate the session.minutes within different category since simillar service might take simillar amount of time. For "resolved", we could compare it with the customer.demeanor and see if there is large difference between the sessions that are resolved and not resolved.
+```
+
+
+
+### Q8
+
+#### Question
+
+Create a model that estimates the effect of the independent variable on the dependent variable while incorporating the other measured variables.  Show the estimates and any measures of significance.
+
+#### Answer
+
+```{r q8}
+model1 <- lm(service~waiting.time.minutes+session.minutes+customer.demeanor+catagory+resolved, data = data)
+
+```
+
+### Q9
+
+#### Question
+
+Are there any other concerns with regard to this study and its design?
+
+#### Answer
+
+```{r q9}
+There might be some other catagories of type of service that was requested by the customer that are not collected.
+```
+
+
+
+### Q10
+
+#### Question
+
+Now imagine that the conclusion you drew from analyzing the data is actually incorrect.  In fact, the real effect of the independent variable is exactly the opposite of what you demonstrated.  How would you explain what happened?
+
+#### Answer
+
+```{r q10}
+What might have happend could be the model does not fit the data perfectly.
+```
+
+
+
+
+### Q11
+
+#### Question
+
+The customer service organization is also interested in understanding the quality of its work and the overall satisfaction of the customer.  At the conclusion of the call, there is an opportunity to conduct a survey.  What is the best way to implement this idea?
+
+
+#### Answer
+
+
+```{r q11}
+I would implement the survey by asking survey question to the customers after each session (both online and phone) they get the service.
+```
+
+
+
+
+
+### Q12
+
+#### Question
+
+What are some possible topics that you might ask about?  Select three potential areas and briefly discuss why these are important to gather information about.
+
+#### Answer
+
+```{r q12}
+First, I would ask about if they prefer online or phone survice since we are looking for a better underestanding between them so it is nessessary to ask customers' need.
+Second, I would ask if the waiting time is acceptable on a scale of 1-5 (5 being  acceptable, 1 being too long). Than we could calcualte if online or phone survice customers has a more satisfied waiting time. Consider that the online customers do not have to hold on phone and wait so they might have more patient.
+Third, I would ask if there is anything we could change in the survice to make this customer's experience better. This would directly show us our weakeness if customers have had a bad experience.
+```
+
+
+
+
+### Q13
+
+#### Question
+
+For each of the three areas that you selected above, design a survey question.  Keep in mind that the design should be appropriate for the setting.  Provide the question, the possible answers, and the meaning of the answers.
+
+
+#### Answer
+
+```{r q13}
+1. Do you prefer online or phone survice?
+2. On a scale of 1-5, how acceptable is the waiting time (1 being too long and 5 being satisfied)?
+3. Is there anything we could do to improve for your experience with us?
+```
+
+
+
+
+
+### Q14
+
+#### Question
+
+In this setting, how many questions would you ask the customer?  Explain your answer.
+
+#### Answer
+
+```{r q14}
+I would ask no more than 5 questions since customers might quit if there are too many questions.
+```
+
+
+
+### Q15
+
+#### Question
+
+The airline has a larger number of questions that it would like to ask.  What would be your strategy for gathering all of this information?  Explain your answer.
+
+#### Answer
+
+```{r q15}
+I would first make all questions multiple choices and make the fonts large and easy to read. This way the customers will not quit the survey because they do not want to type or cannot read the font. Also, I would privide coupon or discount for people who answer the survey. I would state in the beginning that they will get x amount of coupon or discount if they finish the survey.
+```
+
+
+
+
+### Q16
+
+#### Question
+
+In this context, what are the advantages of a longer survey, and what are the benefits for a shorter survey?  Explain your answers.
+
+#### Answer
+
+For longer survey, there would be a more comprehensive answer for the study. For a shorter survey, the customers would be more likely to attend and finish the survey without and even with coupon or discount.
+
+
+### Q17
+
+#### Question
+
+If the airline's managers are adamant about asking all of the preferred questions, what are some alternatives to this automated survey?
+
+#### Answer
+
+I would suggest the manager to provide coupon or discount for more people to volunteer for the survey.
+
+
+
+### Q18
+
+#### Question
+
+Which customers would be more likely to participate in the automated survey after the customer service call, and which customers would be less likely?
+
+#### Answer
+
+Customers who are very satisfied and very not satisfied would be more likely to participate in the automated survey after the customer service call.
+
+
+### Q19
+
+#### Question
+
+How reliable would you consider the information that comes from the automated survey to be?
+
+#### Answer
+
+I would not be too reliable since they could randomly click on the answers. Providing a few questions that requires typing could filter out these responses. Also, participation bias might occur.
+
+### Q20
+
+#### Question
+
+What else could you recommend to the managers of the airline's customer service center to help them achieve the stated goal of understanding the quality of its work and the overall satisfaction of the customer?  Provide a number of strategic recommendations that are actionable, measurable, and amenable to experimentation.
+
+#### Answer
+
+I would recommend the managers to follow up with the customers who had sessions of survices to see if these customers buy tickets from this airline again.
